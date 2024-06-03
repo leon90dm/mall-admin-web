@@ -10,6 +10,7 @@
       :on-success="handleUploadSuccess"
       :on-preview="handlePreview"
       :limit="maxCount"
+      :headers="uploadHeaders"
       :on-exceed="handleExceed"
     >
       <i class="el-icon-plus"></i>
@@ -21,6 +22,7 @@
 </template>
 <script>
   import {policy} from '@/api/oss'
+  import { getToken } from '@/utils/auth'; // Make sure to import your getToken method
 
   export default {
     name: 'multiUpload',
@@ -57,6 +59,16 @@
           fileList.push({url:this.value[i]});
         }
         return fileList;
+      },
+      uploadHeaders() {
+        // Check if there's a token and return the headers object accordingly
+        const token = getToken();
+        if (token) {
+          return {
+            'Authorization': `${token}`
+          };
+        }
+        return {}; // Return empty headers object if there's no token
       }
     },
     methods: {

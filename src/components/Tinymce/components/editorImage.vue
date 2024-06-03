@@ -13,6 +13,7 @@
                  list-type="picture-card"
                  :on-remove="handleRemove"
                  :on-success="handleSuccess"
+                 :headers="uploadHeaders"
                  :before-upload="beforeUpload">
         <el-button size="small" type="primary">点击上传</el-button>
       </el-upload>
@@ -24,6 +25,7 @@
 
 <script>
   import {policy} from '@/api/oss'
+  import { getToken } from '@/utils/auth'; // Make sure to import your getToken method
 
   export default {
     name: 'editorSlideUpload',
@@ -31,6 +33,18 @@
       color: {
         type: String,
         default: '#1890ff'
+      }
+    },
+    computed: {
+      uploadHeaders() {
+        // Check if there's a token and return the headers object accordingly
+        const token = getToken();
+        if (token) {
+          return {
+            'Authorization': `${token}`
+          };
+        }
+        return {}; // Return empty headers object if there's no token
       }
     },
     data() {

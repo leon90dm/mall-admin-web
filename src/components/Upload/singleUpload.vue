@@ -9,6 +9,7 @@
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
+      :headers="uploadHeaders"
       :on-preview="handlePreview">
       <el-button size="small" type="primary">点击上传</el-button>
       <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过10MB</div>
@@ -20,6 +21,7 @@
 </template>
 <script>
   import {policy} from '@/api/oss'
+  import { getToken } from '@/utils/auth'; // Make sure to import your getToken method
 
   export default {
     name: 'singleUpload',
@@ -27,6 +29,16 @@
       value: String
     },
     computed: {
+      uploadHeaders() {
+      // Check if there's a token and return the headers object accordingly
+        const token = getToken();
+        if (token) {
+          return {
+            'Authorization': `${token}`
+          };
+        }
+        return {}; // Return empty headers object if there's no token
+      },
       imageUrl() {
         return this.value;
       },
